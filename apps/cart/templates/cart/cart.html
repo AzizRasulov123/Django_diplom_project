@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load cart_tags %}
+
+{% block title %}
+Корзина
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="fw-bold mb-5 text-center text-dark">Моя корзина</h1>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Список товаров в корзине -->
+            {% for item in cart_items %}
+            <div class="card mb-4 shadow-sm position-relative cart-card">
+                <!-- Кнопка удаления (крестик) -->
+                <form method="post"
+                      action="{% url 'cart:remove-product' item.pk %}"
+                      class="position-absolute top-0 end-0 m-2">
+                    {% csrf_token %}
+                    <button type="submit"
+                            title="Удалить товар"
+                            style="all: unset; cursor: pointer;">
+                        <span class="fs-4 fw-bold">&times;</span>
+                    </button>
+                </form>
+                <!--         Иконка избранного -->
+                {% if user.is_authenticated %}
+                <div class="position-absolute bottom-0 end-0 mb-2 me-2">
+                    <form method="post" action="{% url 'users:add-favorite' item.product.slug %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button type="submit" style="all: unset; cursor: pointer;">
+                            {% if item.product.id in fav_id %}
+                            <i class="fas fa-heart text-danger fs-4"></i>
+                            {% else %}
+                            <i class="far fa-heart text-dark fs-4"></i>
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+
+                <div class="card-body d-flex align-items-start justify-content-between">
+                    <!-- Левая часть: картинка + данные -->
+                    <div class="d-flex align-items-start text-start">
+                        {% if item.product.preview %}
+                        <img src="{{ item.product.preview.url }}" alt="product" class="product-img me-3 rounded"
+                             style="width: 90px; height: 90px; object-fit: cover;">
+                        {% else %}
+                        <img src="{% static 'assets/img/no_image.png' %}" alt="product" class="product-img me-3 rounded"
+                             style="width: 90px; height: 90px; object-fit: cover;">
+                        {% endif %}
+                        <div>
+                            <h5 class="fw-semibold mb-1">{{ item.product.name }}</h5>
+                            <p class="text-muted mb-1">${{ item.product.price }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Правая часть: управление количеством -->
+                    <div class="d-flex align-items-center">
+                        <form method="post" action="{% url 'cart:update-quantity' item.pk %}"
+                              class="d-flex align-items-center">
+                            {% csrf_token %}
+
+                            <input type="hidden" name="action" value="decrease">
+
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">−</button>
+                            <input type="text" value="{{ item.quantity }}"
+                                   class="form-control text-center mx-2 quantity" style="width: 50px;" readonly>
+                        </form>
+
+                        <form method="post" action="{% url 'cart:update-quantity' item.pk %}"
+                              class="d-flex align-items-center">
+                            {% csrf_token %}
+
+                            <input type="hidden" name="action" value="increase">
+
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">+</button>
+                        </form>
+                        <span class="fw-semibold ms-4 fs-5">${{ item.product.price|mul:item.quantity }}</span>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-5">
+                <h4 class="text-muted">🛒 Ваша корзина пуста</h4>
+                <p class="text-secondary">Добавьте товары, чтобы увидеть их здесь.</p>
+                <a href="{% url 'main:shop' %}" class="btn btn-primary mt-3">Перейти в каталог</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Итоговая часть -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4 p-4 bg-light">
+                <h4 class="fw-bold mb-3 text-dark">Итого</h4>
+                <p class="fs-5 mb-4">💰 <strong id="total-price">${{ total_price }}</strong></p>
+
+
+                <!-- Кнопка Оформить заказ -->
+                <button class="btn btn-success w-100 rounded-pill py-2 fs-5 shadow-sm">
+                    ✅ Оформить заказ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

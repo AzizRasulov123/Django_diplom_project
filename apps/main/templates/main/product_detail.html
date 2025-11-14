@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{ product.name }}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- Product Section -->
+    <div class="row mb-5 align-items-start gx-5">
+        <!-- Product Image -->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="position-relative shadow-lg rounded overflow-hidden ratio ratio-4x3">
+                {% if product.preview %}
+                <img src="{{ product.preview.url }}" class="img-fluid object-fit-cover" alt="">
+                {% else %}
+                <img src="{% static 'assets/img/no_image.png' %}" class="img-fluid object-fit-cover" alt="">
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-lg-6 d-flex flex-column justify-content-start">
+            <!-- Title -->
+            <h1 class="fw-bold display-5 mb-3 text-dark">{{ product.name }}</h1>
+
+            <!-- Description -->
+            <p class="text-secondary fs-6 mb-4" style="line-height: 1.6;">{{ product.description }}</p>
+
+            <!-- Price -->
+            <div class="mb-4">
+                <h3 class="fw-semibold text-dark mb-0">
+                    $<span class="fs-2 text-dark">{{ product.price }}</span>
+                </h3>
+            </div>
+
+            <!-- Add to Cart  -->
+            <div class="d-flex align-items-center gap-3 mt-auto">
+                <!-- Добавить в корзину -->
+                <form method="post" action="{% url 'cart:add_to_cart' product.id %}" class="flex-grow-1">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit" name="add_to_cart"
+                            class="btn btn-success btn-lg rounded-2 shadow-sm w-100" style="height:60px;">
+                        🛒 Добавить в корзину
+                    </button>
+                </form>
+
+
+
+
+                <!-- Избранное -->
+                <form method="post" action="{% url 'users:add-favorite' product.slug %}">
+                    {% csrf_token %}
+                     <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit"
+                            class="btn d-flex align-items-center justify-content-center rounded-2 bg-white shadow-sm border p-0"
+                            style="width:60px; height:60px; cursor:pointer;">
+                          {% if product.id in fav_id %}
+                         <i class="fas fa-heart text-danger fs-4"></i>
+                         {% else %}
+                         <i class="far fa-heart text-dark fs-4"></i>
+                         {% endif %}
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- Comments Section -->
+    <div class="row">
+        <div class="col-12 col-lg-10 mx-auto">
+            <h2 class="mb-4 fw-bold text-dark">💬 Комментарии</h2>
+
+            {% for comment in product.comments.all %}
+            <div class="border rounded p-4 mb-3 shadow-sm bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="fw-semibold text-dark">{{ comment.author.username }}</div>
+                    <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
+                </div>
+                <p class="text-secondary mb-0" style="line-height: 1.6;">{{ comment.text }}</p>
+            </div>
+            {% empty %}
+            <p class="text-muted fst-italic">Пока нет комментариев. Будь первым!</p>
+            {% endfor %}
+
+            {% if user.is_authenticated %}
+            <div class="card shadow-sm mt-4 border-0 rounded-3">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-3 fw-semibold">✍️ Оставить комментарий</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_text" class="form-label fw-semibold">Ваш комментарий</label>
+                            <textarea name="text" id="id_text" rows="4"
+                                      class="form-control shadow-sm rounded"
+                                      placeholder="Напишите что-нибудь..." required></textarea>
+                        </div>
+                        <button type="submit" name="submit_comment" class="btn btn-primary px-4 rounded-pill shadow-sm">
+                            💬 Отправить
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-light border mt-4 text-center fst-italic">
+                Чтобы оставить комментарий —
+                <a href="{% url 'users:login' %}" class="fw-semibold text-decoration-none">войдите</a> в аккаунт.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+<nav class="navbar navbar-expand-lg navbar-light shadow">
+    <div class="container d-flex justify-content-between align-items-center">
+
+        <!-- Логотип -->
+        <a class="navbar-brand text-success logo h1 align-self-center" href="{% url 'main:home' %}">Zay</a>
+
+        <!-- Кнопка для мобильного меню -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Навигация -->
+        <div class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between"
+             id="templatemo_main_nav">
+            <div class="flex-fill">
+                <ul class="nav navbar-nav d-flex justify-content-start mx-lg-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'main:home' %}">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'main:shop' %}">Каталог</a></li>
+                </ul>
+            </div>
+
+            <!-- Правая часть -->
+            <div class="navbar align-self-center d-flex align-items-center">
+
+                <!-- Поиск -->
+                <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal"
+                   data-bs-target="#templatemo_search">
+                    <i class="fa fa-fw fa-search text-dark mr-3"></i>
+                </a>
+
+
+                {% if user.is_authenticated %}
+                <!-- Корзина -->
+                <a class="nav-icon position-relative text-decoration-none me-3" href="{% url 'cart:view-cart' %}">
+                    <i class="fa fa-fw fa-cart-arrow-down text-dark"></i>
+                    {% if cart_count > 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark">
+                {{ cart_count }}
+            </span>
+                    {% endif %}
+                </a>
+
+                <!-- Избранное -->
+                <a class="nav-icon position-relative text-decoration-none me-3" href="{% url 'users:favorite' %}">
+                    <i class="far fa-heart"></i>
+                    {% if fav_count > 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark fw-bold">
+                {{ fav_count }}
+            </span>
+                    {% endif %}
+                </a>
+
+                {% else %}
+                <!-- Если пользователь не авторизован, ведёт на login -->
+                <a class="nav-icon position-relative text-decoration-none me-3" href="{% url 'users:login' %}">
+                    <i class="fa fa-fw fa-cart-arrow-down text-dark"></i>
+                </a>
+
+                <a class="nav-icon position-relative text-decoration-none me-3" href="{% url 'users:login' %}">
+                    <i class="far fa-heart"></i>
+                </a>
+                {% endif %}
+
+
+                {% if user.is_authenticated %}
+                <!-- Выход -->
+                <a class="btn btn-success text-white px-3 py-1" href="{% url 'users:logout-user' %}">Выход</a>
+                {% else %}
+                <!-- Авторизация -->
+                <a class="btn btn-outline-dark px-3 py-1 me-2" href="{% url 'users:login' %}">Авторизация</a>
+                <!-- Регистрация -->
+                <a class="btn btn-success text-white px-3 py-1" href="{% url 'users:register' %}">Регистрация</a>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</nav>

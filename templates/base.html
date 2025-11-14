@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% include 'components/base/_styles.html' %}
+</head>
+
+<body>
+    <!-- Start Top Nav -->
+    {% include 'components/base/_navbar.html' %}
+    <!-- Close Top Nav -->
+
+    <!-- Modal -->
+    {% include 'components/base/_modal.html' %}
+
+    <!-- Header -->
+    {% include 'components/base/_header.html' %}
+    <!-- Close Header -->
+
+
+     {% block content %}
+     {% endblock %}
+
+    <!-- Start Footer -->
+    {% include 'components/base/_footer.html' %}
+    <!-- End Footer -->
+
+    <!-- Start Script -->
+    {% include 'components/base/_scripts.html' %}
+    <!-- End Script -->
+</body>
+
+</html>

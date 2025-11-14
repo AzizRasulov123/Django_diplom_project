@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Результаты поиска
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Результаты поиска</h2>
+    {% if products.exists %}
+    <div class="row">
+        {% for prod in products %}
+        <div class="col-md-4">
+            <div class="card mb-4 product-wap rounded-0">
+                <div class="card rounded-0">
+                    {% if prod.preview %}
+                    <img class="card-img rounded-0 img-fluid" src="{{ prod.preview.url }}">
+                    {% else %}
+                    <img class="card-img rounded-0 img-fluid" src="{% static 'assets/img/product_single_01.jpg' %}">
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <p class="text-center mb-0">${{ prod.price }}</p>
+                    <a href="#" class="h3 text-decoration-none">{{ prod.name }}</a>
+                    <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+                        <li class="pt-2">
+                            <span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+                            <span class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+                            <span class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+                            <span class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+                            <span class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+                        </li>
+                    </ul>
+                    <ul class="list-unstyled d-flex justify-content-center mb-1">
+                        <a href="{% url 'main:product-detail' prod.slug   %}" class="btn btn-outline-success">Подробнее</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>По вашему запросу ничего не найдено.</p>
+    {% endif %}
+</div>
+{% endblock %}
