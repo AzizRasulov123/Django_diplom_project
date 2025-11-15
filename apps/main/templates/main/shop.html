@@ -40,10 +40,10 @@
 
             <div class="row">
                 {% for prod in products %}
-                <div class="col-md-4">
-                    <div class="card mb-4 product-wap rounded-0">
+                <div class="col-md-4 mb-4">
+                    <div class="card mb-4 product-wap rounded-0 ">
                         <!-- Обертка с позицией для иконки -->
-                        <div class="card rounded-0 position-relative">
+                        <div class="card rounded-0 position-relative ">
                             {% if prod.preview %}
                             <img class="card-img rounded-0 img-fluid" src="{{ prod.preview.url }}">
                             {% else %}
