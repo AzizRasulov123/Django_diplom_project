@@ -3,7 +3,7 @@ from apps.cart.models import CartItem
 from apps.main.forms import CommentForm
 from apps.main.models import Category, Product
 from apps.users.models import Favorite
-
+from django.core.paginator import Paginator
 
 
 
@@ -24,6 +24,9 @@ def show_home_page(request):
 
 def show_shop_page(request):
     products = Product.objects.all()
+    paginator = Paginator(products, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     if request.user.is_authenticated:
         cart_count = CartItem.objects.filter(user=request.user).count()
@@ -39,7 +42,8 @@ def show_shop_page(request):
         'products': products,
         'cart_count': cart_count,
         'fav_id': fav_id,
-        'fav_count': fav_count
+        'fav_count': fav_count,
+        'page_obj': page_obj
     }
 
     return render(request, 'main/shop.html', context)
@@ -48,16 +52,26 @@ def show_shop_page(request):
 def show_shop_category_page(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     products = Product.objects.filter(category=category)
+    paginator = Paginator(products, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     if request.user.is_authenticated:
         cart_count = CartItem.objects.filter(user=request.user).count()
+        fav_id = request.user.favorites.all().values_list('product_id', flat=True)
+        fav_count = Favorite.objects.filter(user=request.user).count()
     else:
-        cart_count = 0
+        cart_count = 0,
+        fav_id = [],
+        fav_count = 0
 
     context = {
         'category': category,
         'products': products,
-        'cart_count': cart_count
+        'cart_count': cart_count,
+        'page_obj': page_obj,
+        'fav_id': fav_id,
+        'fav_count': fav_count
 
     }
     return render(request, 'main/shop.html', context)

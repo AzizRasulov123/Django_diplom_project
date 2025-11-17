@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,29 +10,31 @@
     {% include 'components/base/_styles.html' %}
 </head>
 
-<body>
-    <!-- Start Top Nav -->
-    {% include 'components/base/_navbar.html' %}
-    <!-- Close Top Nav -->
+<body class="d-flex flex-column min-vh-100">
+<!-- Start Top Nav -->
+{% include 'components/base/_navbar.html' %}
+<!-- Close Top Nav -->
 
-    <!-- Modal -->
-    {% include 'components/base/_modal.html' %}
+<!-- Modal -->
+{% include 'components/base/_modal.html' %}
 
-    <!-- Header -->
-    {% include 'components/base/_header.html' %}
-    <!-- Close Header -->
+<!-- Header -->
+{% include 'components/base/_header.html' %}
+<!-- Close Header -->
+
+<main class="flex-grow-1">
+    {% block content %}
+    {% endblock %}
+</main>
 
 
-     {% block content %}
-     {% endblock %}
+<!-- Start Footer -->
+{% include 'components/base/_footer.html' %}
+<!-- End Footer -->
 
-    <!-- Start Footer -->
-    {% include 'components/base/_footer.html' %}
-    <!-- End Footer -->
-
-    <!-- Start Script -->
-    {% include 'components/base/_scripts.html' %}
-    <!-- End Script -->
+<!-- Start Script -->
+{% include 'components/base/_scripts.html' %}
+<!-- End Script -->
 </body>
 
 </html>
