@@ -30,15 +30,14 @@
                     <i class="fa fa-fw fa-search text-dark mr-3"></i>
                 </a>
 
-
                 {% if user.is_authenticated %}
                 <!-- Корзина -->
                 <a class="nav-icon position-relative text-decoration-none me-3" href="{% url 'cart:view-cart' %}">
                     <i class="fa fa-fw fa-cart-arrow-down text-dark"></i>
                     {% if cart_count > 0 %}
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark">
-                {{ cart_count }}
-            </span>
+                        {{ cart_count }}
+                    </span>
                     {% endif %}
                 </a>
 
@@ -47,11 +46,10 @@
                     <i class="far fa-heart"></i>
                     {% if fav_count > 0 %}
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark fw-bold">
-                {{ fav_count }}
-            </span>
+                        {{ fav_count }}
+                    </span>
                     {% endif %}
                 </a>
-
                 {% else %}
                 <!-- Если пользователь не авторизован, ведёт на login -->
                 <a class="nav-icon position-relative text-decoration-none me-3" href="{% url 'users:login' %}">
@@ -63,8 +61,11 @@
                 </a>
                 {% endif %}
 
-
                 {% if user.is_authenticated %}
+                <!-- Профиль -->
+                <a class="nav-icon position-relative text-decoration-none me-3" href="{% url 'users:profile' %}">
+                    <i class="fa fa-fw fa-user text-dark"></i>
+                </a>
                 <!-- Выход -->
                 <a class="btn btn-success text-white px-3 py-1" href="{% url 'users:logout-user' %}">Выход</a>
                 {% else %}

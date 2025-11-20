@@ -54,7 +54,7 @@
                             <form method="post" action="{% url 'users:add-favorite' prod.slug %}"
                                   class="position-absolute top-0 end-0 m-2">
                                 {% csrf_token %}
-                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                 <button type="submit" class="btn p-0 border-0 bg-transparent" style="cursor:pointer;">
                                     <i class="{% if prod.id in fav_id %}fas fa-heart text-danger{% else %}far fa-heart text-secondary{% endif %} fs-5"></i>
                                 </button>

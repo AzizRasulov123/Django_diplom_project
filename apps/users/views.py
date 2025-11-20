@@ -77,3 +77,12 @@ def remove_from_favorite(request, product_slug):
     next_url = request.POST.get('next', 'users:favorite')
     return redirect(next_url)
 
+def show_profile(request):
+    favorites = Favorite.objects.filter(user=request.user).select_related('product').order_by('created_at')[:3]
+    context = {
+        'author': request.user,
+        'email':request.user.email,
+        'favorites': favorites
+    }
+
+    return render(request, 'users/profile.html', context)

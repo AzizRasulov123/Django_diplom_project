@@ -4,6 +4,10 @@ from apps.common.models import BaseTimedModel
 from apps.main.models import Product
 
 
+
+
+
+
 class Favorite(BaseTimedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='favorited_by')

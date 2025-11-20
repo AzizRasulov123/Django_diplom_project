@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block title %}
+{% load static %}
+Профиль
+{% endblock %}
+
+{% block content %}
+
+
+
+
+<div class="container py-5">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-3 mb-4">
+            <div class="list-group">
+                <a href="#" class="list-group-item sidebar-link active">
+                    <i class="fa fa-user me-2"></i> Профиль
+                </a>
+                <a href="{% url 'users:favorite' %}" class="list-group-item sidebar-link">
+                    <i class="fa fa-heart me-2"></i> Избранное
+                </a>
+                <a href="{% url 'cart:view-cart' %}" class="list-group-item sidebar-link">
+                    <i class="fa fa-box me-2"></i> Мои заказы
+                </a>
+                <a href="{% url 'users:logout-user' %}" class="list-group-item sidebar-link text-danger">
+                    <i class="fa fa-sign-out-alt me-2"></i> Выход
+                </a>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col-md-9">
+
+            <!-- Profile Card -->
+            <div class="card mb-4">
+                <div class="card-body d-flex align-items-center">
+                    <div>
+                        <h4 class="mb-1">{{ author }}</h4>
+                        <p class="mb-1 text-muted">{{ email }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favorites -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Избранные товары</h5>
+                    <a href="{% url 'users:favorite' %}" class="btn btn-sm btn-outline-primary">Все</a>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+
+                        <!-- Product -->
+                        {% for favorite in favorites %}
+                        <div class="col-md-4">
+                            <div class="card">
+                                {% if favorite.product.preview %}
+                                <img src="{{ favorite.product.preview.url }}" class="card-img-top">
+                                {% else %}
+                                <img src="{% static 'assets/img/no_image.png' %}" class="card-img-top">
+                                {% endif %}
+                                <div class="card-body text-center">
+                                    <h6>{{ favorite.product.name }}</h6>
+                                    <p class="text-muted">${{ favorite.product.price }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Последние заказы</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table align-middle">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Дата</th>
+                            <th>Сумма</th>
+                            <th>Статус</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>#1243</td>
+                            <td>22.01.2025</td>
+                            <td>$199</td>
+                            <td><span class="badge bg-success">Доставлен</span></td>
+                            <td><a href="#" class="btn btn-sm btn-primary">Подробнее</a></td>
+                        </tr>
+                        <tr>
+                            <td>#1201</td>
+                            <td>11.12.2024</td>
+                            <td>$89</td>
+                            <td><span class="badge bg-warning text-dark">В пути</span></td>
+                            <td><a href="#" class="btn btn-sm btn-primary">Подробнее</a></td>
+                        </tr>
+                        <tr>
+                            <td>#1102</td>
+                            <td>02.10.2024</td>
+                            <td>$49</td>
+                            <td><span class="badge bg-danger">Отменен</span></td>
+                            <td><a href="#" class="btn btn-sm btn-primary">Подробнее</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

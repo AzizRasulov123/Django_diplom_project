@@ -1,3 +1,5 @@
+from zoneinfo import ZoneInfo
+
 from django.contrib.auth.models import User
 from django.db import models
 from apps.common.models import BaseTimedModel
@@ -51,5 +53,8 @@ class Comment(BaseTimedModel):
      class Meta:
          verbose_name = 'Комментарий'
          verbose_name_plural = 'Комментарии'
+
+
+
 
 
