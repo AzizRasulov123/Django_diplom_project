@@ -26,6 +26,22 @@
                         <span class="fs-4 fw-bold">&times;</span>
                     </button>
                 </form>
+
+
+                <!-- Уведомления -->
+                {% if messages %}
+                <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+
                 <!--         Иконка избранного -->
                 {% if user.is_authenticated %}
                 <div class="position-absolute bottom-0 end-0 mb-2 me-2">

@@ -1,9 +1,7 @@
 
 from django.shortcuts import render, get_object_or_404
-from apps.cart.models import CartItem
 from apps.main.forms import CommentForm
 from apps.main.models import Category, Product
-from apps.users.models import Favorite
 from django.core.paginator import Paginator
 
 

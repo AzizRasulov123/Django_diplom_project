@@ -1,6 +1,7 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 
 from apps.cart.models import CartItem
 from apps.main.models import Product
@@ -23,13 +24,14 @@ def show_login_page(request):
     }
     return render(request, 'users/login.html', context)
 
+
 def show_register_page(request):
     if request.method == 'POST':
-       form = RegistrationForm(data=request.POST)
-       if form.is_valid():
-           user = form.save()
-           login(request, user)
-           return redirect('main:home')
+        form = RegistrationForm(data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('main:home')
     else:
         form = RegistrationForm()
 
@@ -44,6 +46,7 @@ def show_logout(request):
     logout(request)
     return redirect('main:home')
 
+
 def show_favorite(request):
     favorites = Favorite.objects.filter(user=request.user).select_related('product')
     cart_count = CartItem.objects.filter(user=request.user).count()
@@ -56,14 +59,17 @@ def show_favorite(request):
     }
     return render(request, 'users/favorites.html', context)
 
+
 @login_required(login_url='users:login')
 def add_to_favorite(request, product_slug):
     if request.method == 'POST':
         product = get_object_or_404(Product, slug=product_slug)
         favorite, created = Favorite.objects.get_or_create(user=request.user, product=product)
-
-        if not created:
+        if created:
+            messages.success(request, f'"{product.name}" добавлен в избранное!')
+        else:
             favorite.delete()
+            messages.info(request, f'"{product.name}" убран из избранного!')
 
     next_url = request.POST.get('next', 'main:product-detail')
     return redirect(next_url)
@@ -77,11 +83,12 @@ def remove_from_favorite(request, product_slug):
     next_url = request.POST.get('next', 'users:favorite')
     return redirect(next_url)
 
+
 def show_profile(request):
     favorites = Favorite.objects.filter(user=request.user).select_related('product').order_by('created_at')[:3]
     context = {
         'author': request.user,
-        'email':request.user.email,
+        'email': request.user.email,
         'favorites': favorites
     }
 
